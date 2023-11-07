@@ -26,3 +26,16 @@ console.log("Стоимость разработки сайта " + fullPrice + 
 console.log(screens.toLowerCase().split(', '));
 
 console.log("Процент отката посреднику за работу " + fullPrice * (rollback/100));
+
+if (fullPrice >= 30000) {
+   console.log("Даем скидку в 10%");
+}
+if (fullPrice >= 15000 && fullPrice < 30000) {
+   console.log("Даем скидку в 5%");
+}
+if (fullPrice >= 0 && fullPrice < 15000) {
+   console.log("Скидка не предусмотрена");
+}
+if (fullPrice < 0) {
+   console.log("Что то пошло не так");
+}
