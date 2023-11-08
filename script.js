@@ -32,12 +32,17 @@ const getAllServicePrices = function() {
    let sum = 0;
 
    for (let i = 0; i < 2; i++) {
+      let servicePrice = 0;
+
       if (i === 0) service1 = prompt("Какой дополнительный тип услуги нужен?", "Анимация");
       if (i === 1) service2 = prompt("Какой дополнительный тип услуги нужен?", "Метрика");
 
-      sum += +prompt("Сколько это будет стоить?", 5000);
+      do {
+         servicePrice = prompt("Сколько это будет стоить?", 5000);
+      } while (!isNumber(servicePrice));
+      
+      sum += +servicePrice;
    }
-
    return sum;
 }
 
@@ -72,6 +77,7 @@ asking();
 
 fullPrice = getFullPrice(+screenPrice, getAllServicePrices());
 servicePercentPrice = getServicePercentPrices(fullPrice, rollback);
+title = getTitle(title);
 
 console.log(getRollbackMessage(fullPrice));
 
