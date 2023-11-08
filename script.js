@@ -1,3 +1,5 @@
+'use strict';
+
 const title = prompt("Как называется ваш проект?", "Название");
 const screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
 const screenPrice = +prompt("Сколько будет стоить данная работа?", 20000);
@@ -9,8 +11,44 @@ const servicePrice1 = +prompt("Сколько это будет стоить?", 
 const service2 = prompt("Какой дополнительный тип услуги нужен?", "Метрика");
 const servicePrice2 = +prompt("Сколько это будет стоить?", 3000);
 
-const fullPrice = screenPrice + servicePrice1 + servicePrice2;
-const servicePercentPrice = Math.ceil(fullPrice - (fullPrice * (rollback/100)));
+let fullPrice = 0;
+let servicePercentPrice = 0;
+
+const getRollbackMessage = function(price) {
+   if (price >= 30000) {
+      return "Даем скидку в 10%";
+   }
+   if (price >= 15000 && price < 30000) {
+      return "Даем скидку в 5%";
+   }
+   if (price >= 0 && price < 15000) {
+      return "Скидка не предусмотрена";
+   }
+   if (price < 0) {
+      return "Что то пошло не так";
+   }
+}
+
+const getAllServicePrices = function(price1, price2) {
+   return price1 + price2;
+}
+
+const getTitle = function(str) {
+   return str.trim()[0].toUpperCase() + str.trim().toLowerCase().slice(1);
+}
+
+const getServicePercentPrices = function(price, rollback) {
+   return Math.ceil(price - (price * (rollback/100)));
+}
+
+function getFullPrice(price, servicePrice) {
+   return price + servicePrice;
+}
+
+fullPrice = getFullPrice(screenPrice, getAllServicePrices(servicePrice1, servicePrice2));
+servicePercentPrice = getServicePercentPrices(fullPrice, rollback);
+
+console.log(getRollbackMessage(fullPrice));
 
 console.log("Итоговая стоимость " + servicePercentPrice);
 
@@ -18,24 +56,4 @@ console.log(typeof title);
 console.log(typeof fullPrice);
 console.log(typeof adaptive);
 
-console.log(screens.length);
-
-console.log("Стоимость верстки экранов " + screenPrice + " рублей");
-console.log("Стоимость разработки сайта " + fullPrice + " рублей");
-
 console.log(screens.toLowerCase().split(', '));
-
-console.log("Процент отката посреднику за работу " + fullPrice * (rollback/100));
-
-if (fullPrice >= 30000) {
-   console.log("Даем скидку в 10%");
-}
-if (fullPrice >= 15000 && fullPrice < 30000) {
-   console.log("Даем скидку в 5%");
-}
-if (fullPrice >= 0 && fullPrice < 15000) {
-   console.log("Скидка не предусмотрена");
-}
-if (fullPrice < 0) {
-   console.log("Что то пошло не так");
-}
