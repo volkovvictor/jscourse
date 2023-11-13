@@ -47,17 +47,16 @@ const appData = {
             servicePrice = prompt("Сколько это будет стоить?", 5000);
          } while (!appData.isNumber(servicePrice));
 
-         appData.services[name] = +servicePrice;
+         appData.services[i + ': ' + name] = +servicePrice;
       }
    
       appData.adaptive = confirm("Нужен ли адаптив на сайте?");
    },
 
    addPrices: function() {
-
-      for (let key of appData.screens) {
-         appData.screenPrice += +key.price;
-      }
+      appData.screenPrice = appData.screens.reduce(function(value, item) {
+         return value + item.price;
+      }, appData.screenPrice);
 
       for (let key in appData.services) {
          appData.allServicePrices += +appData.services[key];
