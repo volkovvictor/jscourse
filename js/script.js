@@ -153,6 +153,18 @@ const appData = {
       totalCountRollback.value = appData.servicePercentPrice;
    },
 
+   clear: function() {
+      appData.screens = [];
+      appData.screenPrice = 0;
+      appData.screensCount = 0;
+      appData.servicesPercent = {};
+      appData.servicesNumber = {};
+      appData.percentServicePrices = 0;
+      appData.numberServicePrices = 0;
+      appData.fullPrice = 0;
+      //appData.servicePercentPrice = 0;
+   },
+
    logger: function(arr) {
       for (let key in arr) {
          let value = typeof arr[key] === "object" ? JSON.stringify(arr[key]) : arr[key];
@@ -166,6 +178,9 @@ const appData = {
       appData.addRollback();
       appData.addPrices();
       appData.showResult();
+      appData.clear();
+
+      console.log(appData);
    },
 
    init: function() {
