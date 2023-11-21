@@ -4,11 +4,13 @@ const title = document.getElementsByTagName('h1')[0];
 const startBtn = document.getElementsByClassName('handler_btn')[0];
 const resetBtn = document.getElementsByClassName('handler_btn')[1];
 const screenBtn = document.querySelector('.screen-btn');
+const checkboxes = document.querySelectorAll('input[type=checkbox]')
 const percentItems = document.querySelectorAll('.other-items.percent');
 const numberItems = document.querySelectorAll('.other-items.number');
 const rollbackRange = document.querySelector('.rollback input[type=range]');
 const rollbackValue = document.querySelector('.rollback .range-value');
 
+const totalInputs = document.querySelectorAll('.total-input');
 const total = document.getElementsByClassName('total-input')[0];
 const totalCount = document.getElementsByClassName('total-input')[1];
 const totalCountOther = document.getElementsByClassName('total-input')[2];
@@ -35,7 +37,31 @@ const appData = {
       return !isNaN(parseFloat(num)) && isFinite(num);
    },
 
-   disabled: function(value) {
+   disableItems: function() {
+      screens = document.querySelectorAll('.screen');
+
+      screens.forEach(item => {
+         const input = item.querySelector('input');
+         const select = item.querySelector('select');
+
+         input.disabled ? input.disabled = false : input.disabled = true;
+         select.disabled ? select.disabled = false : select.disabled = true;
+      });
+
+      startBtn.style.display === 'none' ? startBtn.style.display = 'block' : startBtn.style.display = 'none';
+      resetBtn.style.display === 'none' ? resetBtn.style.display = 'block' : resetBtn.style.display = 'none';
+
+      if (screenBtn.disabled) {
+         screenBtn.disabled = false;
+         screenBtn.style.opacity = '1';
+      }
+      else {
+         screenBtn.disabled = true;
+         screenBtn.style.opacity = '0.5';
+      }
+   },
+
+   disableButton: function(value) {
       startBtn.disabled = value;
 
       if (value === true) startBtn.style.opacity = '0.5';
@@ -62,7 +88,7 @@ const appData = {
          if (select.value === "" || !appData.isNumber(input.value)) disabled = true;
       });
 
-      this.disabled(disabled);
+      this.disableButton(disabled);
    },
 
    addTitle: function() {
@@ -83,9 +109,6 @@ const appData = {
             count: +input.value,
             price: +select.value * +input.value
          });
-
-
-        // appData.disabledButton(disabled);
       });
    },
 
@@ -156,15 +179,48 @@ const appData = {
       totalCountRollback.value = this.servicePercentPrice;
    },
 
-   clear: function() {
+   clearObject: function() {
+      this.rollback = 0;
+      this.title = "";
       this.screens = [];
       this.screenPrice = 0;
       this.screensCount = 0;
+      this.adaptive = true;
       this.servicesPercent = {};
       this.servicesNumber = {};
       this.percentServicePrices = 0;
       this.numberServicePrices = 0;
       this.fullPrice = 0;
+      this.servicePercentPrice = 0;
+   },
+
+   clearElems: function() {
+      screens.forEach(screen => {
+         const input = screen.querySelector('input');
+         const select = screen.querySelector('select');
+
+         input.value = "";
+         select.value = "";
+      });
+      
+      checkboxes.forEach(checkbox => checkbox.checked = false);
+      totalInputs.forEach(input => input.value = "");
+      rollbackRange.value = 0;
+      rollbackValue.textContent = 0 + '%';
+   },
+
+   removeScreenBlock: function() {
+      screens.forEach((screen, index) => {
+         if (index !== 0) screen.remove();
+      });
+   },
+
+   reset: function() {
+      this.clearObject();
+      this.clearElems();
+      this.removeScreenBlock();
+      this.disableItems();
+      this.checkAllItems();
    },
 
    logger: function(arr) {
@@ -175,12 +231,12 @@ const appData = {
    },
 
    start: function() {
-      this.clear();
-
       this.addScreens();
       this.addServices();
       this.addPrices();
       this.showResult();
+
+      this.disableItems();
 
       console.log(this)
    },
@@ -189,6 +245,7 @@ const appData = {
       this.checkAllItems();
       this.addTitle();
       startBtn.addEventListener('click', this.start.bind(appData));
+      resetBtn.addEventListener('click', this.reset.bind(appData));
       screenBtn.addEventListener('click', this.addScreenBlock.bind(appData));
       rollbackRange.addEventListener('input', this.addRollback.bind(appData));
    }
