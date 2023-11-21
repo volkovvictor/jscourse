@@ -10,6 +10,12 @@ const numberItems = document.querySelectorAll('.other-items.number');
 const rollbackRange = document.querySelector('.rollback input[type=range]');
 const rollbackValue = document.querySelector('.rollback .range-value');
 
+const cmsOpen = document.getElementById('cms-open');
+const hiddenCmsVariants = document.querySelector('.hidden-cms-variants');
+const cmsOtherInput = document.getElementById('cms-other-input');
+const cmsSelect = document.getElementById('cms-select');
+const mainControlsInput = hiddenCmsVariants.querySelector('.main-controls__input');
+
 const totalInputs = document.querySelectorAll('.total-input');
 const total = document.getElementsByClassName('total-input')[0];
 const totalCount = document.getElementsByClassName('total-input')[1];
@@ -128,6 +134,11 @@ const appData = {
 
          if (checkbox.checked) this.servicesNumber[label.textContent] = +input.value;
       });
+
+      if (cmsOpen.checked) {
+         if (this.isNumber(cmsSelect.value)) this.servicesPercent['cms'] = +cmsSelect.value;
+         if (cmsSelect.value === 'other' && this.isNumber(cmsOtherInput.value)) this.servicesPercent['cms'] = +cmsOtherInput.value;
+      }
    },
 
    addRollback: function(e) {
@@ -179,6 +190,18 @@ const appData = {
       totalCountRollback.value = this.servicePercentPrice;
    },
 
+   openCmsBlock: function() {
+      if (cmsOpen.checked) {
+         hiddenCmsVariants.style.display = 'flex';
+         cmsSelect.addEventListener('change', () => {
+            cmsSelect.value === 'other' ? mainControlsInput.style.display = 'block' : mainControlsInput.style.display = 'none';
+         });
+
+      } else {
+         hiddenCmsVariants.style.display = 'none';
+      }
+   },
+
    clearObject: function() {
       this.rollback = 0;
       this.title = "";
@@ -207,6 +230,12 @@ const appData = {
       totalInputs.forEach(input => input.value = "");
       rollbackRange.value = 0;
       rollbackValue.textContent = 0 + '%';
+
+      cmsSelect.value = "";
+      cmsOtherInput.value = "";
+
+      mainControlsInput.style.display = 'none';
+      hiddenCmsVariants.style.display = 'none';
    },
 
    removeScreenBlock: function() {
@@ -248,6 +277,7 @@ const appData = {
       resetBtn.addEventListener('click', this.reset.bind(appData));
       screenBtn.addEventListener('click', this.addScreenBlock.bind(appData));
       rollbackRange.addEventListener('input', this.addRollback.bind(appData));
+      cmsOpen.addEventListener('change', this.openCmsBlock.bind(appData));
    }
 }
 
